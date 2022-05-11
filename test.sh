@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PORT=60175
-IP=127.0.0.1
+IP=172.30.10.7
 
 FILE_NAME=""
 DIR_NAME=""
