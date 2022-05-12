@@ -4,10 +4,30 @@
 /* $begin echoserverimain */
 
 #include "stockserver.h"
+#define SBUFSIZE 1024
+#define NTHREADS 1024
 
 int lines = 0; /*파일 라인 수(주식의 개수)*/
 int loop = 1;  /*루프 지속할지 말지 결정하는 변수*/
 sem_t filemutex;
+int clientNumber = 0;
+
+typedef struct
+{
+    int *buf;    /* Buffer array */
+    int n;       /* Maximum number of slots */
+    int front;   /* buf[(front+1)%n] is first item */
+    int rear;    /* buf[rear%n] is last item */
+    sem_t mutex; /* Protects accesses to buf */
+    sem_t slots; /* Counts available slots */
+    sem_t items; /* Counts available items */
+} sbuf_t;
+
+sbuf_t sbuf;
+void sbuf_init(sbuf_t *sp, int n);
+void sbuf_deinit(sbuf_t *sp);
+void sbuf_insert(sbuf_t *sp, int item);
+int sbuf_remove(sbuf_t *sp);
 
 void echo(int connfd);
 void command(char *BUF2, char *buf, char *argv[], char *clientBuf);
@@ -16,7 +36,7 @@ void *thread(void *vargp);
 
 int main(int argc, char **argv)
 {
-    int listenfd, *connfdp;
+    int listenfd, connfd;
     socklen_t clientlen;
     struct sockaddr_storage clientaddr; /* Enough space for any address */ // line:netp:echoserveri:sockaddrstorage
     sigset_t signal_pool;
@@ -48,12 +68,14 @@ int main(int argc, char **argv)
     Sigemptyset(&signal_pool);
     Sigaddset(&signal_pool, SIGINT);
 
-    while (loop)
+    sbuf_init(&sbuf, SBUFSIZE);
+    for (int i = 0; i < NTHREADS; i++) /* Create worker threads */
+        Pthread_create(&tid, NULL, thread, NULL);
+    while (1)
     {
         clientlen = sizeof(struct sockaddr_storage);
-        connfdp = Malloc(sizeof(int));                              // line:conc:echoservert:beginmalloc
-        *connfdp = Accept(listenfd, (SA *)&clientaddr, &clientlen); // line:conc:echoservert:endmalloc
-        Pthread_create(&tid, NULL, thread, connfdp);
+        connfd = Accept(listenfd, (SA *)&clientaddr, &clientlen);
+        sbuf_insert(&sbuf, connfd); /* Insert connfd in buffer */
     }
 
     exit(0);
@@ -117,8 +139,9 @@ void command(char *BUF2, char *buf, char *argv[], char *clientBuf)
             {
                 target->left_stock -= amount;
                 sprintf(clientBuf, "[buy] " ANSI_COLOR_GREEN "success" ANSI_COLOR_RESET "\n");
+                // fprintf(stdout, "changed! %d %d -> %d %d\n", target->ID, target->left_stock + amount, target->ID, target->left_stock);
             }
-            // fprintf(stdout, "before sem_post!\n");
+
             sem_post(&target->write);
         }
     }
@@ -148,6 +171,7 @@ void command(char *BUF2, char *buf, char *argv[], char *clientBuf)
 
             target->left_stock += amount;                                                   // 고객이 파는 상황이므로 주식의 개수를 늘린다.
             sprintf(clientBuf, "[sell] " ANSI_COLOR_GREEN "success" ANSI_COLOR_RESET "\n"); //성공 출력메시지
+            // fprintf(stdout, "changed! %d %d -> %d %d\n", target->ID, target->left_stock - amount, target->ID, target->left_stock);
 
             sem_post(&target->write);
         }
@@ -171,7 +195,7 @@ void sigint_handler()
     exit(1);
 }
 
-void *thread(void *vargp)
+void echo_cnt(int connfd)
 {
     int n;
     char buf[MAXLINE];       // 원본
@@ -180,22 +204,70 @@ void *thread(void *vargp)
     char *argv[MAXLINE];
     rio_t rio;
 
-    int connfd = *((int *)vargp);
-    Pthread_detach(pthread_self()); // line:conc:echoservert:detach
-    Free(vargp);                    // line:conc:echoservert:free
-    // echo(connfd);
-    //  여기서 부터 시작!
     Rio_readinitb(&rio, connfd);
     while ((n = Rio_readlineb(&rio, buf, MAXLINE)) != 0)
     {
         // printf("server received %d bytes\n", n);
         command(BUF2, buf, argv, clientBuf);
         Rio_writen(connfd, clientBuf, MAXLINE);
+        // fprintf(stdout, "command: %s", buf);
     }
-    sem_wait(&filemutex);
-    save_binary_tree(tree_head);
-    sem_post(&filemutex);
-    Close(connfd);
-    return NULL;
 }
-/* $end echoservertmain */
+
+void *thread(void *vargp)
+{
+    Pthread_detach(pthread_self());
+    while (1)
+    {
+        int connfd = sbuf_remove(&sbuf); /* Remove connfd from buf */
+        sem_wait(&filemutex);            // 연결 끝나면 정산 time
+        clientNumber++;
+        sem_post(&filemutex);
+
+        echo_cnt(connfd); /* Service client */
+
+        sem_wait(&filemutex); // 연결 끝나면 정산 time
+        clientNumber--;
+        if (clientNumber == 0)
+            save_binary_tree(tree_head); // 개수 줄이고 만약에 남아있는 client 개수가 0개면 기록하자!
+        sem_post(&filemutex);
+        Close(connfd);
+    }
+}
+
+/* Create an empty, bounded, shared FIFO buffer with n slots */
+void sbuf_init(sbuf_t *sp, int n)
+{
+    sp->buf = Calloc(n, sizeof(int));
+    sp->n = n;                  /* Buffer holds max of n items */
+    sp->front = sp->rear = 0;   /* Empty buffer iff front == rear */
+    Sem_init(&sp->mutex, 0, 1); /* Binary semaphore for locking */
+    Sem_init(&sp->slots, 0, n); /* Initially, buf has n empty slots */
+    Sem_init(&sp->items, 0, 0); /* Initially, buf has 0 items */
+}
+
+void sbuf_deinit(sbuf_t *sp)
+{
+    Free(sp->buf);
+}
+
+void sbuf_insert(sbuf_t *sp, int item)
+{
+    P(&sp->slots);                          /* Wait for available slot */
+    P(&sp->mutex);                          /* Lock the buffer */
+    sp->buf[(++sp->rear) % (sp->n)] = item; /* Insert the item */
+    V(&sp->mutex);                          /* Unlock the buffer */
+    V(&sp->items);                          /* Announce available item */
+}
+
+/* Remove and return the first item from buffer sp */
+int sbuf_remove(sbuf_t *sp)
+{
+    int item;
+    P(&sp->items);                           /* Wait for available item */
+    P(&sp->mutex);                           /* Lock the buffer */
+    item = sp->buf[(++sp->front) % (sp->n)]; /* Remove the item */
+    V(&sp->mutex);                           /* Unlock the buffer */
+    V(&sp->slots);                           /* Announce available slot */
+    return item;
+}

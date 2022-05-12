@@ -18,7 +18,7 @@ typedef struct
 
 int lines = 0; /*파일 라인 수(주식의 개수)*/
 int loop = 1;  /*루프 지속할지 말지 결정하는 변수*/
-sem_t readMutex;
+int clientNumber = 0;
 
 void echo(int connfd);
 void init_pool(int listenfd, pool *p);
@@ -107,6 +107,8 @@ void add_client(int connfd, pool *p)
     for (i = 0; i < FD_SETSIZE; i++) /* Find an available slot */
         if (p->clientfd[i] < 0)
         {
+            clientNumber++;
+            // fprintf(stdout, "clientNumber is %d\n", clientNumber);
             /* Add connected descriptor to the pool */
             p->clientfd[i] = connfd;                 // line:conc:echoservers:beginaddclient
             Rio_readinitb(&p->clientrio[i], connfd); // line:conc:echoservers:endaddclient
@@ -154,10 +156,14 @@ int check_clients(pool *p)
             }
             else /* EOF detected, remove descriptor from pool */
             {
-                save_binary_tree(tree_head);  // save file on exit!
-                Close(connfd);                // line:conc:echoservers:closeconnfd
-                FD_CLR(connfd, &p->read_set); // line:conc:echoservers:beginremove
-                p->clientfd[i] = -1;          // line:conc:echoservers:endremove
+                clientNumber--;
+                // fprintf(stdout, "clientNumber is %d\n", clientNumber);
+                assert(clientNumber >= 0);
+                if (clientNumber == 0)
+                    save_binary_tree(tree_head); // save file on exit!
+                Close(connfd);                   // line:conc:echoservers:closeconnfd
+                FD_CLR(connfd, &p->read_set);    // line:conc:echoservers:beginremove
+                p->clientfd[i] = -1;             // line:conc:echoservers:endremove
                 // fprintf(stdout, "connection ended! event based server\n");
             }
         }
