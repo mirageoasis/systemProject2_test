@@ -15,8 +15,8 @@ CSV=".csv"
 RES="result"
 
 #
-MAX_ORDER=1
-MAX_CLIENT=1
+MAX_ORDER=100
+MAX_CLIENT=100
 #
 
 ## 명령어 모드
