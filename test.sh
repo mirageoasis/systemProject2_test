@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PORT=60175
-IP=172.30.10.7
+IP=127.0.0.1
 
 FILE_NAME=""
 DIR_NAME=""
@@ -15,8 +15,8 @@ CSV=".csv"
 RES="result"
 
 #
-MAX_ORDER=100
-MAX_CLIENT=100
+MAX_ORDER=1
+MAX_CLIENT=1
 #
 
 ## 명령어 모드
@@ -48,131 +48,137 @@ STOCK_INC=10
 #rmdir
 
 
-
 ## 10 NORMAL THREAD EVENT
-DIR_NAME=$EVENT$NORM$STOCK_NOW
-FILE_NAME=$EVENT$NORM$STOCK_NOW$CSV
+while [ $STOCK_NOW -le 40 ]
+do
+    DIR_NAME=$EVENT$NORM$STOCK_NOW
+    FILE_NAME=$EVENT$NORM$STOCK_NOW$CSV
 
-cp -r resource $DIR_NAME
-cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
-cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
+    cp -r resource $DIR_NAME
+    cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
+    cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 
-cd $DIR_NAME
-make
-./stockserver ${PORT} &
-sleep 1
-#taskset -c 0 stockserver
-./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
-cp result.csv ../result/$FILE_NAME
-make clean
-fuser -k ${PORT}/tcp
-cd ..
-rm -rf -R $DIR_NAME
-
-
-DIR_NAME=$THREAD$NORM$STOCK_NOW
-FILE_NAME=$THREAD$NORM$STOCK_NOW$CSV
-
-cp -r resource $DIR_NAME
-cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
-cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
-
-cd $DIR_NAME
-make
-./stockserver ${PORT} &
-sleep 1
-#taskset -c 0 stockserver
-./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
-cp result.csv ../result/$FILE_NAME
-make clean
-fuser -k ${PORT}/tcp
-cd ..
-rm -rf -R $DIR_NAME
-## 10 NORMAL THREAD EVENT
+    cd $DIR_NAME
+    make
+    ./stockserver ${PORT} &
+    sleep 1
+    #taskset -c 0 stockserver
+    ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $NORMAL
+    cp result.csv ../result/$FILE_NAME
+    make clean
+    fuser -k ${PORT}/tcp
+    cd ..
+    rm -rf -R $DIR_NAME
 
 
-## 10 SHOW THREAD EVENT
-DIR_NAME=$EVENT$SHOW$STOCK_NOW
-FILE_NAME=$EVENT$SHOW$STOCK_NOW$CSV
+    DIR_NAME=$THREAD$NORM$STOCK_NOW
+    FILE_NAME=$THREAD$NORM$STOCK_NOW$CSV
+    
+    cp -r resource $DIR_NAME
+    cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
+    cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 
-cp -r resource $DIR_NAME
-cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
-cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
-
-cd $DIR_NAME
-make
-./stockserver ${PORT} &
-sleep 1
-#taskset -c 0 stockserver
-./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
-cp result.csv ../result/$FILE_NAME
-make clean
-fuser -k ${PORT}/tcp
-cd ..
-rm -rf -R $DIR_NAME
-
-
-DIR_NAME=$THREAD$SHOW$STOCK_NOW
-FILE_NAME=$THREAD$SHOW$STOCK_NOW$CSV
-
-cp -r resource $DIR_NAME
-cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
-cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
-
-cd $DIR_NAME
-make
-./stockserver ${PORT} &
-sleep 1
-#taskset -c 0 stockserver
-./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
-cp result.csv ../result/$FILE_NAME
-make clean
-fuser -k ${PORT}/tcp
-cd ..
-rm -rf -R $DIR_NAME
-## 10 SHOW THREAD EVENT
+    cd $DIR_NAME
+    make
+    ./stockserver ${PORT} &
+    sleep 1
+    #taskset -c 0 stockserver
+    ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $NORMAL
+    cp result.csv ../result/$FILE_NAME
+    make clean
+    fuser -k ${PORT}/tcp
+    cd ..
+    rm -rf -R $DIR_NAME
+    ## 10 NORMAL THREAD EVENT
 
 
+    ## 10 SHOW THREAD EVENT
+    DIR_NAME=$EVENT$SHOW$STOCK_NOW
+    FILE_NAME=$EVENT$SHOW$STOCK_NOW$CSV
+
+    cp -r resource $DIR_NAME
+    cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
+    cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
+
+    cd $DIR_NAME
+    make
+    ./stockserver ${PORT} &
+    sleep 1
+    #taskset -c 0 stockserver
+    ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $ONLY_SHOW
+    cp result.csv ../result/$FILE_NAME
+    make clean
+    fuser -k ${PORT}/tcp
+    cd ..
+    rm -rf -R $DIR_NAME
+
+
+    DIR_NAME=$THREAD$SHOW$STOCK_NOW
+    FILE_NAME=$THREAD$SHOW$STOCK_NOW$CSV
+
+    cp -r resource $DIR_NAME
+    cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
+    cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
+
+    cd $DIR_NAME
+    make
+    ./stockserver ${PORT} &
+    sleep 1
+    #taskset -c 0 stockserver
+    ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $ONLY_SHOW
+    cp result.csv ../result/$FILE_NAME
+    make clean
+    fuser -k ${PORT}/tcp
+    cd ..
+    rm -rf -R $DIR_NAME
+    ## 10 SHOW THREAD EVENT
+
+
+    ## 10 SB THREAD EVENT
+    DIR_NAME=$EVENT$SB$STOCK_NOW
+    FILE_NAME=$EVENT$SB$STOCK_NOW$CSV
+
+    cp -r resource $DIR_NAME
+    cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
+    cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
+
+    cd $DIR_NAME
+    make
+    ./stockserver ${PORT} &
+    sleep 1
+    #taskset -c 0 stockserver
+    ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $ONLY_SB
+    cp result.csv ../result/$FILE_NAME
+    make clean
+    fuser -k ${PORT}/tcp
+    cd ..
+    rm -rf -R $DIR_NAME
+
+
+    DIR_NAME=$THREAD$SB$STOCK_NOW
+    FILE_NAME=$THREAD$SB$STOCK_NOW$CSV
+
+    cp -r resource $DIR_NAME
+    cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
+    cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
+
+    cd $DIR_NAME
+    make
+    ./stockserver ${PORT} &
+    sleep 1
+    #taskset -c 0 stockserver
+    ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $ONLY_SB
+    cp result.csv ../result/$FILE_NAME
+    make clean
+    fuser -k ${PORT}/tcp
+    cd ..
+    rm -rf -R $DIR_NAME
+
+    STOCK_NOW=$(($STOCK_INC+$STOCK_NOW))    
+done
 ## 10 SB THREAD EVENT
-DIR_NAME=$EVENT$SB$STOCK_NOW
-FILE_NAME=$EVENT$SB$STOCK_NOW$CSV
 
-cp -r resource $DIR_NAME
-cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
-cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
-
-cd $DIR_NAME
-make
-./stockserver ${PORT} &
-sleep 1
-#taskset -c 0 stockserver
-./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
-cp result.csv ../result/$FILE_NAME
-make clean
-fuser -k ${PORT}/tcp
-cd ..
-rm -rf -R $DIR_NAME
-
-
-DIR_NAME=$THREAD$SB$STOCK_NOW
-FILE_NAME=$THREAD$SB$STOCK_NOW$CSV
-
-cp -r resource $DIR_NAME
-cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
-cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
-
-cd $DIR_NAME
-make
-./stockserver ${PORT} &
-sleep 1
-#taskset -c 0 stockserver
-./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
-cp result.csv ../result/$FILE_NAME
-make clean
-fuser -k ${PORT}/tcp
-cd ..
-rm -rf -R $DIR_NAME
-## 10 SB THREAD EVENT
+exit
 
 ## STOCK NUMBER CHANGE 
 STOCK_NOW=$(($STOCK_INC+$STOCK_NOW))
@@ -190,7 +196,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -210,7 +215,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 01
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -232,7 +236,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -252,7 +255,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -274,7 +276,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
@@ -294,7 +295,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
@@ -320,7 +320,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -340,7 +339,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -362,7 +360,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -382,7 +379,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -404,7 +400,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
@@ -424,7 +419,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
@@ -450,7 +444,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -470,7 +463,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -492,7 +484,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -512,7 +503,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -534,7 +524,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
@@ -554,7 +543,6 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
-sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
