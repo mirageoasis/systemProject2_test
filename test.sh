@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PORT=60175
-IP=127.0.0.1
+IP=172.30.10.7
 
 FILE_NAME=""
 DIR_NAME=""
@@ -15,8 +15,8 @@ CSV=".csv"
 RES="result"
 
 #
-MAX_ORDER=100
-MAX_CLIENT=100
+MAX_ORDER=1
+MAX_CLIENT=1
 #
 
 ## 명령어 모드
