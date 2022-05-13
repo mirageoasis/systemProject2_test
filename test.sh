@@ -15,8 +15,8 @@ CSV=".csv"
 RES="result"
 
 #
-MAX_ORDER=1
-MAX_CLIENT=1
+MAX_ORDER=100
+MAX_CLIENT=100
 #
 
 ## 명령어 모드
@@ -60,6 +60,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -79,6 +80,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -100,6 +102,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -119,6 +122,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -140,6 +144,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
@@ -159,6 +164,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
@@ -184,6 +190,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -203,6 +210,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 01
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -224,6 +232,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -243,6 +252,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -264,6 +274,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
@@ -283,6 +294,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
@@ -308,6 +320,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -327,6 +340,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -348,6 +362,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -367,6 +382,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -388,6 +404,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
@@ -407,6 +424,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
@@ -432,6 +450,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -451,6 +470,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $NORMAL
 cp result.csv ../result/$FILE_NAME
@@ -472,6 +492,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -491,6 +512,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SHOW
 cp result.csv ../result/$FILE_NAME
@@ -512,6 +534,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
@@ -531,6 +554,7 @@ cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 cd $DIR_NAME
 make
 ./stockserver ${PORT} &
+sleep 1
 #taskset -c 0 stockserver
 ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $ONLY_SB
 cp result.csv ../result/$FILE_NAME
