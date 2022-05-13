@@ -69,7 +69,7 @@ do
     fuser -k ${PORT}/tcp
     cd ..
     rm -rf -R $DIR_NAME
-	exit
+	
 
     DIR_NAME=$THREAD$NORM$STOCK_NOW
     FILE_NAME=$THREAD$NORM$STOCK_NOW$CSV
