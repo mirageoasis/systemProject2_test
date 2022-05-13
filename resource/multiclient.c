@@ -125,7 +125,7 @@ int main(int argc, char **argv)
 							Rio_writen(clientfd, buf, strlen(buf));
 							Rio_readnb(&rio, buf, MAXLINE);
 							Fputs(buf, stdout);
-							usleep(1000000);
+							//usleep(1000000);
 						}
 
 						Close(clientfd);
