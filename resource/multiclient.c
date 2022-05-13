@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 
 	if (argc != 6)
 	{
-		fprintf(stderr, "usage: %s <host> <port> <client number> <order per client> <mod>\n", argv[0]);
+		fprintf(stderr, "usage: %s <host> <port> <client number> <order per client> <stock number> <mod>\n", argv[0]);
 		exit(0);
 	}
 
@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 	port = argv[2];
 	num_client = atoi(argv[3]); // 여기 설정잘하기
 	int max_order = atoi(argv[4]);
-	int mod = atoi(argv[5]); // 0이면 정상 show면 1 sell buy 면 2
+	int stock_number int mod = atoi(argv[6]); // 0이면 정상 show면 1 sell buy 면 2
 	int cnt = 0;
 	// i 는 order 개수  j는 client 의 개수
 	/*	fork for each client process	*/
