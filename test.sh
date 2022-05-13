@@ -15,8 +15,8 @@ CSV=".csv"
 RES="result"
 
 #
-MAX_ORDER=100
-MAX_CLIENT=100
+MAX_ORDER=1
+MAX_CLIENT=1
 #
 
 ## 명령어 모드
@@ -60,16 +60,16 @@ do
 
     cd $DIR_NAME
     make
-    ./stockserver ${PORT} &
+    ./stockserver ${PORT} & 
     sleep 1
-    #taskset -c 0 stockserver
+    taskset -pc 0 $!
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $NORMAL
     cp result.csv ../result/$FILE_NAME
     make clean
     fuser -k ${PORT}/tcp
     cd ..
     rm -rf -R $DIR_NAME
-
+	exit
 
     DIR_NAME=$THREAD$NORM$STOCK_NOW
     FILE_NAME=$THREAD$NORM$STOCK_NOW$CSV
@@ -82,6 +82,7 @@ do
     make
     ./stockserver ${PORT} &
     sleep 1
+    taskset -pc 0 $!
     #taskset -c 0 stockserver
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $NORMAL
     cp result.csv ../result/$FILE_NAME
@@ -104,6 +105,7 @@ do
     make
     ./stockserver ${PORT} &
     sleep 1
+    taskset -pc 0 $!
     #taskset -c 0 stockserver
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $ONLY_SHOW
     cp result.csv ../result/$FILE_NAME
@@ -124,6 +126,7 @@ do
     make
     ./stockserver ${PORT} &
     sleep 1
+    taskset -pc 0 $!
     #taskset -c 0 stockserver
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $ONLY_SHOW
     cp result.csv ../result/$FILE_NAME
@@ -146,6 +149,7 @@ do
     make
     ./stockserver ${PORT} &
     sleep 1
+    taskset -pc 0 $!
     #taskset -c 0 stockserver
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $ONLY_SB
     cp result.csv ../result/$FILE_NAME
@@ -166,6 +170,7 @@ do
     make
     ./stockserver ${PORT} &
     sleep 1
+    taskset -pc 0 $!
     #taskset -c 0 stockserver
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $ONLY_SB
     cp result.csv ../result/$FILE_NAME
