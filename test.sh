@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PORT=60175
-IP=172.30.10.7
+IP=127.0.0.1
 
 FILE_NAME=""
 DIR_NAME=""
@@ -15,8 +15,8 @@ CSV=".csv"
 RES="result"
 
 #
-MAX_ORDER=100
-MAX_CLIENT=100
+MAX_ORDER=1
+MAX_CLIENT=1
 #
 
 ## 명령어 모드
@@ -56,6 +56,7 @@ do
 
     cp -r resource $DIR_NAME
     cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
+    cp $EVENT/binary_tree.c $DIR_NAME/binary_tree.c
     cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 
     cd $DIR_NAME
@@ -75,7 +76,8 @@ do
     FILE_NAME=$THREAD$NORM$STOCK_NOW$CSV
     
     cp -r resource $DIR_NAME
-    cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
+    cp $THREAD/binary_tree.c $DIR_NAME/binary_tree.c
+    cp $THREAD/stockserver.c $DIR_NAME/stockserver.c
     cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 
     cd $DIR_NAME
@@ -97,6 +99,7 @@ do
     FILE_NAME=$EVENT$SHOW$STOCK_NOW$CSV
 
     cp -r resource $DIR_NAME
+    cp $EVENT/binary_tree.c $DIR_NAME/binary_tree.c
     cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
     cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 
@@ -117,7 +120,8 @@ do
     FILE_NAME=$THREAD$SHOW$STOCK_NOW$CSV
 
     cp -r resource $DIR_NAME
-    cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
+    cp $THREAD/binary_tree.c $DIR_NAME/binary_tree.c
+    cp $THREAD/stockserver.c $DIR_NAME/stockserver.c
     cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 
     cd $DIR_NAME
@@ -139,6 +143,7 @@ do
     FILE_NAME=$EVENT$SB$STOCK_NOW$CSV
 
     cp -r resource $DIR_NAME
+    cp $EVENT/binary_tree.c $DIR_NAME/stockserver.c
     cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
     cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 
@@ -159,7 +164,8 @@ do
     FILE_NAME=$THREAD$SB$STOCK_NOW$CSV
 
     cp -r resource $DIR_NAME
-    cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
+    cp $THREAD/binary_tree.c $DIR_NAME/stockserver.c
+    cp $THREAD/stockserver.c $DIR_NAME/stockserver.c
     cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 
     cd $DIR_NAME
