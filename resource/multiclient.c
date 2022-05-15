@@ -6,7 +6,7 @@
 #define ORDER_DEC 10		// 주문량 감수
 #define STOCK_NUM 10		// 주식의 개수
 #define BUY_SELL_MAX 15		// 거래 한도
-#define CLIENT_DEC 10		// client 감소
+#define CLIENT_DEC 100		// client 감소
 #define MEAN_LOOP_CNT 5		// 평균 낼 때 순회하는 루프수
 // multiclient 변형 그냥
 int main(int argc, char **argv)

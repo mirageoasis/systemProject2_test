@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PORT=60175
-IP=127.0.0.1
+IP=172.30.10.7
 
 FILE_NAME=""
 DIR_NAME=""
@@ -25,7 +25,7 @@ ONLY_SHOW=1
 ONLY_SB=2
 ##
 ##주식 개수
-STOCK_NOW=10
+STOCK_NOW=40
 STOCK_INC=10
 STOCK_MAX=40
 ##
@@ -51,7 +51,8 @@ STOCK_MAX=40
 ## 10 NORMAL THREAD EVENT
 while [ $STOCK_NOW -le $STOCK_MAX ]
 do
-    DIR_NAME=$EVENT$NORM$STOCK_NOW
+#: << "END"
+	DIR_NAME=$EVENT$NORM$STOCK_NOW
     FILE_NAME=$EVENT$NORM$STOCK_NOW$CSV
 
     cp -r resource $DIR_NAME
@@ -61,9 +62,9 @@ do
 
     cd $DIR_NAME
     make
+	#./stockserver ${PORT} &
     taskset -c 0 ./stockserver ${PORT} & 
-    sleep 1
-    #taskset -pc 0 $!
+    sleep 1 
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $NORMAL
     cp result.csv ../result/$FILE_NAME
     make clean
@@ -71,7 +72,9 @@ do
     cd ..
     rm -rf -R $DIR_NAME
 		
+#END
 
+#: << "END"
     DIR_NAME=$THREAD$NORM$STOCK_NOW
     FILE_NAME=$THREAD$NORM$STOCK_NOW$CSV
     
@@ -83,6 +86,7 @@ do
     cd $DIR_NAME
     make
     taskset -c 0 ./stockserver ${PORT} & 
+	#./stockserver ${PORT} &
     sleep 1
     #taskset -c 0 stockserver
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $NORMAL
@@ -90,9 +94,10 @@ do
     make clean
     fuser -k ${PORT}/tcp
     cd ..
-    rm -rf -R $DIR_NAME
+    #rm -rf -R $DIR_NAME
     ## 10 NORMAL THREAD EVENT
-
+#END
+: << "END"
 
     ## 10 SHOW THREAD EVENT
     DIR_NAME=$EVENT$SHOW$STOCK_NOW
@@ -106,6 +111,7 @@ do
     cd $DIR_NAME
     make    
     taskset -c 0 ./stockserver ${PORT} & 
+	#./stockserver ${PORT} &
     sleep 1
     #taskset -c 0 stockserver
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $ONLY_SHOW
@@ -114,7 +120,8 @@ do
     fuser -k ${PORT}/tcp
     cd ..
     rm -rf -R $DIR_NAME
-
+END
+: << "END"
 
     DIR_NAME=$THREAD$SHOW$STOCK_NOW
     FILE_NAME=$THREAD$SHOW$STOCK_NOW$CSV
@@ -127,6 +134,7 @@ do
     cd $DIR_NAME
     make
 	taskset -c 0 ./stockserver ${PORT} & 
+	#./stockserver ${PORT} &
     sleep 1
     #taskset -c 0 stockserver
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $ONLY_SHOW
@@ -136,7 +144,8 @@ do
     cd ..
     rm -rf -R $DIR_NAME
     ## 10 SHOW THREAD EVENT
-
+END
+: << "END"
 
     ## 10 SB THREAD EVENT
     DIR_NAME=$EVENT$SB$STOCK_NOW
@@ -149,6 +158,7 @@ do
 
     cd $DIR_NAME
     make 
+	#./stockserver ${PORT} &
     taskset -c 0 ./stockserver ${PORT} & 
     sleep 1
     #taskset -c 0 stockserver
@@ -158,7 +168,8 @@ do
     fuser -k ${PORT}/tcp
     cd ..
     rm -rf -R $DIR_NAME
-
+END
+: << "END"
 
     DIR_NAME=$THREAD$SB$STOCK_NOW
     FILE_NAME=$THREAD$SB$STOCK_NOW$CSV
@@ -171,6 +182,7 @@ do
     cd $DIR_NAME
     make
     taskset -c 0 ./stockserver ${PORT} & 
+	#./stockserver ${PORT} &
     sleep 1
     #taskset -c 0 stockserver
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $ONLY_SB
@@ -179,7 +191,7 @@ do
     fuser -k ${PORT}/tcp
     cd ..
     rm -rf -R $DIR_NAME
-
+END
     STOCK_NOW=$(($STOCK_INC+$STOCK_NOW))    
 done
 ## 10 SB THREAD EVENT
