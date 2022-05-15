@@ -15,8 +15,8 @@ CSV=".csv"
 RES="result"
 
 #
-MAX_ORDER=1
-MAX_CLIENT=1
+MAX_ORDER=100
+MAX_CLIENT=100
 #
 
 ## 명령어 모드
@@ -86,8 +86,8 @@ do
 
     cd $DIR_NAME
     make
-    #taskset -c 0 ./stockserver ${PORT} & 
-	./stockserver ${PORT} &
+    taskset -c 0 ./stockserver ${PORT} & 
+	#./stockserver ${PORT} &
     sleep 1
     #taskset -c 0 stockserver
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $NORMAL
