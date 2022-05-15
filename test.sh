@@ -70,6 +70,7 @@ do
     make clean
     fuser -k ${PORT}/tcp
     cd ..
+	sleep 1
     rm -rf -R $DIR_NAME
 		
 #END
@@ -85,8 +86,8 @@ do
 
     cd $DIR_NAME
     make
-    taskset -c 0 ./stockserver ${PORT} & 
-	#./stockserver ${PORT} &
+    #taskset -c 0 ./stockserver ${PORT} & 
+	./stockserver ${PORT} &
     sleep 1
     #taskset -c 0 stockserver
     ./multiclient $IP $PORT $MAX_CLIENT $MAX_ORDER $STOCK_NOW $NORMAL
@@ -94,10 +95,11 @@ do
     make clean
     fuser -k ${PORT}/tcp
     cd ..
-    #rm -rf -R $DIR_NAME
+    sleep 1
+	rm -rf -R $DIR_NAME
     ## 10 NORMAL THREAD EVENT
 #END
-: << "END"
+#: << "END"
 
     ## 10 SHOW THREAD EVENT
     DIR_NAME=$EVENT$SHOW$STOCK_NOW
@@ -119,9 +121,10 @@ do
     make clean
     fuser -k ${PORT}/tcp
     cd ..
+	sleep 1
     rm -rf -R $DIR_NAME
-END
-: << "END"
+#END
+#: << "END"
 
     DIR_NAME=$THREAD$SHOW$STOCK_NOW
     FILE_NAME=$THREAD$SHOW$STOCK_NOW$CSV
@@ -142,17 +145,18 @@ END
     make clean
     fuser -k ${PORT}/tcp
     cd ..
+	sleep 1
     rm -rf -R $DIR_NAME
     ## 10 SHOW THREAD EVENT
-END
-: << "END"
+#END
+#: << "END"
 
     ## 10 SB THREAD EVENT
     DIR_NAME=$EVENT$SB$STOCK_NOW
     FILE_NAME=$EVENT$SB$STOCK_NOW$CSV
 
     cp -r resource $DIR_NAME
-    cp $EVENT/binary_tree.c $DIR_NAME/stockserver.c
+    cp $EVENT/binary_tree.c $DIR_NAME/binary_tree.c
     cp $EVENT/stockserver.c $DIR_NAME/stockserver.c
     cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 
@@ -167,15 +171,16 @@ END
     make clean
     fuser -k ${PORT}/tcp
     cd ..
-    rm -rf -R $DIR_NAME
-END
-: << "END"
+    sleep 1
+	rm -rf -R $DIR_NAME
+#END
+#: << "END"
 
     DIR_NAME=$THREAD$SB$STOCK_NOW
     FILE_NAME=$THREAD$SB$STOCK_NOW$CSV
 
     cp -r resource $DIR_NAME
-    cp $THREAD/binary_tree.c $DIR_NAME/stockserver.c
+    cp $THREAD/binary_tree.c $DIR_NAME/binary_tree.c
     cp $THREAD/stockserver.c $DIR_NAME/stockserver.c
     cp stock_files/$STOCK_NOW.txt $DIR_NAME/stock.txt
 
@@ -190,8 +195,9 @@ END
     make clean
     fuser -k ${PORT}/tcp
     cd ..
-    rm -rf -R $DIR_NAME
-END
+    sleep 1
+	rm -rf -R $DIR_NAME
+#END
     STOCK_NOW=$(($STOCK_INC+$STOCK_NOW))    
 done
 ## 10 SB THREAD EVENT
