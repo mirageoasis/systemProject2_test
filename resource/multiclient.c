@@ -144,7 +144,7 @@ int main(int argc, char **argv)
 				e_usec += ((end.tv_sec * 1000000) + end.tv_usec) - ((start.tv_sec * 1000000) + start.tv_usec);
 			}
 
-			sprintf(buf2 + strlen(buf2), "%d,%d,%d,%lf\n", stock_number, i, j, (double)i * j * MEAN_LOOP_CNT / e_usec * 100000); // order per client, client number , time
+			sprintf(buf2 + strlen(buf2), "%d,%d,%d,%lf\n", stock_number, i, j, (double)i * j * MEAN_LOOP_CNT / e_usec * 1000000); // order per client, client number , time
 			fprintf(stdout, "order per %d cilent number %d : %lu microseconds\n", i, j, e_usec / MEAN_LOOP_CNT);			  // order per client, client number , time
 		}
 	}
