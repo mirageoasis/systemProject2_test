@@ -228,6 +228,7 @@ void *thread(void *vargp)
 
         sem_wait(&filemutex); // 연결 끝나면 정산 time
         clientNumber--;
+        assert(clientNumber >= 0);
         if (clientNumber == 0)
             save_binary_tree(tree_head); // 개수 줄이고 만약에 남아있는 client 개수가 0개면 기록하자!
         sem_post(&filemutex);
